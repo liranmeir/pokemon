@@ -3,6 +3,7 @@ import PokemonCard from "./PkemonCard";
 import { Grid } from "@mui/material";
 import { ClientPokemon, PokemonsResponse } from "./types";
 
+// @ts-ignore
 import { useSpeechSynthesis } from "react-speech-kit";
 
 function App() {
