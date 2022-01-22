@@ -1,45 +1,43 @@
-import { useState } from 'react'
-import logo from './logo.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import PokemonCard from "./PkemonCard";
+import { Grid } from "@mui/material";
+import { ClientPokemon, PokemonsResponse } from "./types";
+
+import { useSpeechSynthesis } from "react-speech-kit";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [pokemons, setPokemons] = useState<ClientPokemon[]>([]);
+  const { speak } = useSpeechSynthesis();
+  useEffect(() => {
+    async function initPokemons() {
+      const response: PokemonsResponse = await fetch(
+        "https://pokeapi.co/api/v2/pokemon?limit=500"
+      ).then((response) => response.json());
+
+      const pokemonsNames = response.results.map(({ name }) => ({ name }));
+      setPokemons(pokemonsNames);
+    }
+    initPokemons();
+  }, []);
+
+  const handleSpeakClick = (name: string) => {
+    speak({ text: name });
+  };
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
+      <Grid container spacing={2}>
+        {pokemons.map((pokemon, index) => (
+          <Grid item key={index}>
+            <PokemonCard
+              pokemon={pokemon}
+              onSpeakClick={handleSpeakClick}
+            ></PokemonCard>
+          </Grid>
+        ))}
+      </Grid>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
