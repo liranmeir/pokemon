@@ -12,5 +12,5 @@ export interface Result {
 
 export interface ClientPokemon {
   name: string;
-  // url: string;
+  isFavorite: boolean;
 }
