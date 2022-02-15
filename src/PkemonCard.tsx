@@ -29,7 +29,6 @@ function PokemonCard({
 }) {
   const { name, isFavorite } = pokemon;
   const url = `https://img.pokemondb.net/artwork/large/${name}.jpg`;
-  console.log(name);
 
   return (
     <Grid item>
@@ -60,7 +59,7 @@ function PokemonCard({
               onFavoriteClick(name, !isFavorite);
             }}
           >
-            <FavoriteIcon style={{ color: isFavorite && red[500] }} />
+            {isFavorite ? <FavoriteIcon style={{ color: red[500] }} /> : <FavoriteIcon />}
           </IconButton>
         </CardActions>
       </Card>
@@ -68,11 +67,11 @@ function PokemonCard({
   );
 }
 
-// export default PokemonCard;
+export default PokemonCard;
 
-export default React.memo(PokemonCard, (prevProps, nextProps) => {
-  return (
-    prevProps.pokemon.name === nextProps.pokemon.name &&
-    prevProps.pokemon.isFavorite === nextProps.pokemon.isFavorite
-  );
-});
+// export default React.memo(PokemonCard, (prevProps, nextProps) => {
+//   return (
+//     prevProps.pokemon.name === nextProps.pokemon.name &&
+//     prevProps.pokemon.isFavorite === nextProps.pokemon.isFavorite
+//   );
+// });
