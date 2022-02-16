@@ -91,7 +91,7 @@ function App() {
             ></Chip>
           </Grid>
           {alphabet.map((letter) => (
-            <Grid item justifyContent="spaceBetween">
+            <Grid item justifyContent="spaceBetween" key={letter}>
               <Box>
                 <Chip
                   color="primary"
