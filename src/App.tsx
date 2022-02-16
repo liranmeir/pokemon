@@ -5,9 +5,20 @@ import { ClientPokemon, PokemonsResponse } from "./types";
 
 // @ts-ignore
 import { useSpeechSynthesis } from "react-speech-kit";
+import { useDidMount } from "./useDidMount";
 const alphabet = [..."abcdefghijklmnopqrstuvwxyz"];
 
+const getFavoritePokemonHash = () => {
+  const favoritePokemonsHash =
+    JSON.parse(window.localStorage.getItem("favoritePokemonsHash") || "{}") ||
+    {};
+
+  return favoritePokemonsHash;
+};
+
 function App() {
+  const isFirstRenderFn = useDidMount();
+
   const [pokemons, setPokemons] = useState<ClientPokemon[]>([]);
   const [filterBy, setFilterBy] = useState<string>("");
 
@@ -16,18 +27,36 @@ function App() {
   const { speak } = useSpeechSynthesis();
 
   useEffect(() => {
-    async function initPokemons() {
+    if (!isFirstRenderFn()) {
+      const favoritePokemons = pokemons.filter((p) => p.isFavorite);
+      const favoritePokemonsHash = Object.fromEntries(
+        favoritePokemons.map((e) => [e.name, e.isFavorite])
+      );
+
+      window.localStorage.setItem(
+        "favoritePokemonsHash",
+        JSON.stringify(favoritePokemonsHash)
+      );
+    }
+  }, [pokemons]);
+
+  useEffect(() => {
+    async function initPokemons(favoritePokemonsHash: {
+      [name: string]: boolean;
+    }) {
       const response: PokemonsResponse = await fetch(
         "https://pokeapi.co/api/v2/pokemon?limit=500"
       ).then((response) => response.json());
 
-      const pokemons = response.results.map(({ name }) => ({
+      const initialPokemons = response.results.map(({ name }) => ({
         name,
-        isFavorite: false,
+        isFavorite: favoritePokemonsHash[name] || false,
       }));
-      setPokemons(pokemons);
+
+      setPokemons(initialPokemons);
     }
-    initPokemons();
+    const favoritePokemonsHash = getFavoritePokemonHash();
+    initPokemons(favoritePokemonsHash);
   }, []);
 
   const handleSpeakClick = useCallback(
@@ -80,9 +109,8 @@ function App() {
         <Grid item>
           <Grid container spacing={2}>
             {pokemonsFlittered.map((pokemon) => (
-              <Grid item>
+              <Grid item key={pokemon.name}>
                 <PokemonCard
-                  key={pokemon.name}
                   pokemon={pokemon}
                   onSpeakClick={handleSpeakClick}
                   onFavoriteClick={handleFavoriteClick}
