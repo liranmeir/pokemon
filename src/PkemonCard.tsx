@@ -31,39 +31,41 @@ function PokemonCard({
   const url = `https://img.pokemondb.net/artwork/large/${name}.jpg`;
 
   return (
-    <Grid item>
-      <Card sx={{ maxWidth: 345 }}>
-        <CardHeader
-          action={
-            <IconButton aria-label="settings">
-              <MoreVertIcon />
-            </IconButton>
-          }
-          title={name.toUpperCase()}
-          subheader=""
-        />
-        <CardMedia component="img" image={url} alt="Paella dish" />
-        <CardContent></CardContent>
-        <CardActions disableSpacing>
-          <IconButton
-            aria-label="Audiotrack"
-            onClick={() => {
-              onSpeakClick(name);
-            }}
-          >
-            <AudiotrackIcon />
+    <Card sx={{ maxWidth: 345 }}>
+      <CardHeader
+        action={
+          <IconButton aria-label="settings">
+            <MoreVertIcon />
           </IconButton>
-          <IconButton
-            aria-label="Audiotrack"
-            onClick={() => {
-              onFavoriteClick(name, !isFavorite);
-            }}
-          >
-            {isFavorite ? <FavoriteIcon style={{ color: red[500] }} /> : <FavoriteIcon />}
-          </IconButton>
-        </CardActions>
-      </Card>
-    </Grid>
+        }
+        title={name.toUpperCase()}
+        subheader=""
+      />
+      <CardMedia component="img" image={url} alt="Paella dish" />
+      <CardContent></CardContent>
+      <CardActions disableSpacing>
+        <IconButton
+          aria-label="Audiotrack"
+          onClick={() => {
+            onSpeakClick(name);
+          }}
+        >
+          <AudiotrackIcon />
+        </IconButton>
+        <IconButton
+          aria-label="Audiotrack"
+          onClick={() => {
+            onFavoriteClick(name, !isFavorite);
+          }}
+        >
+          {isFavorite ? (
+            <FavoriteIcon style={{ color: red[500] }} />
+          ) : (
+            <FavoriteIcon />
+          )}
+        </IconButton>
+      </CardActions>
+    </Card>
   );
 }
 
