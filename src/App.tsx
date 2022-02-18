@@ -6,7 +6,7 @@ import { ClientPokemon, PokemonsResponse } from "./types";
 // @ts-ignore
 import { useSpeechSynthesis } from "react-speech-kit";
 import { useDidMount } from "./useDidMount";
-const alphabet = [..."abcdefghijklmnopqrstuvwxyz"];
+import Header from "./Header";
 
 const getFavoritePokemonHash = () => {
   const favoritePokemonsHash =
@@ -79,32 +79,7 @@ function App() {
 
   return (
     <div className="App">
-      <AppBar position="fixed">
-        <Grid container spacing={2} padding={2}>
-          <Grid item>
-            <Chip
-              color="primary"
-              label={"All"}
-              onClick={() => {
-                setFilterBy("");
-              }}
-            ></Chip>
-          </Grid>
-          {alphabet.map((letter) => (
-            <Grid item justifyContent="spaceBetween" key={letter}>
-              <Box>
-                <Chip
-                  color="primary"
-                  label={letter.toUpperCase()}
-                  onClick={() => {
-                    setFilterBy(letter);
-                  }}
-                ></Chip>
-              </Box>
-            </Grid>
-          ))}
-        </Grid>
-      </AppBar>
+      <Header setFilterBy={setFilterBy} />
       <Grid container paddingTop={8}>
         <Grid item>
           <Grid container spacing={2}>
